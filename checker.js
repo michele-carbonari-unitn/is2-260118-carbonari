@@ -10,8 +10,19 @@ function check(url, invocationParameters,  expectedResultData, expectedResultSta
         statusTestPassed: null,
         resultDataAsExpected: null
     }
-
-
+    var query="?";
+    for (let key in invocationParameters) {
+        query+=key+"="+invocationParameters[key]+"&";
+      }
+    var newQuery = query.substring(0, query.length-1);
+    fetch(""+url+newQuery)
+    .then(function(res) {
+        checkResult.resultData=res.json();
+        checkResult.resultStatus=res.status();
+        checkResult.statusTestPassed=res.status()==expectedResultStatus;
+        checkResult.resultDataAsExpected=compareResult(JSON.parse(res.json()), expectedResultData);
+        return checkResult;
+    });
 
 }
 
